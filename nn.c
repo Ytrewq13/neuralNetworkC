@@ -27,7 +27,12 @@ void create_network(int num_layers, int *layersizes, neuron **network) {
 }
 
 float sigmoid(float x) {
+    // Logistic function. Bounded between 0 and 1. Non-linear. Derivative of s(x) is s(x)(1 - s(x))
     return 1.0f / (1.0f + exp(-x));
+}
+
+float sigmoid_prime(float x) {
+    return x * (1.0 - x);
 }
 
 float activate(float x) {
@@ -41,7 +46,8 @@ void feed_forward(int num_layers, int *layersizes, neuron **network, float *inpu
         /* For each layer in the network... */
         for (j = 0; j < *(layersizes+i); j++) {
             /* For each neuron in the layer... */
-            (*(network+i)/*Layer*/+j)/*Neuron*/->input_sum = 0;
+            (*(network+i)/*Layer*/+j)/*Neuron*/->input_sum = 0; // TODO: use the bias of the neuron here instead of 0.
+            // TODO: bias also needs to be included in backprop.
         }
     }
     for (i = 0; i < *layersizes; i++) {
@@ -59,6 +65,10 @@ void feed_forward(int num_layers, int *layersizes, neuron **network, float *inpu
             }
         }
     }
+}
+
+void backpropagate(int num_layers, int *layersizes, neuron **network, float *target_outputs) {
+    // TODO: the stuff to go here.
 }
 
 int main(int argc, char **argv) {
