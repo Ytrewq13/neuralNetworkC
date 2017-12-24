@@ -46,7 +46,7 @@ void feed_forward(int num_layers, int *layersizes, neuron **network, float *inpu
         /* For each layer in the network... */
         for (j = 0; j < *(layersizes+i); j++) {
             /* For each neuron in the layer... */
-            (*(network+i)/*Layer*/+j)/*Neuron*/->input_sum = 0; // TODO: use the bias of the neuron here instead of 0.
+            (*(network+i)/*Layer*/+j)/*Neuron*/->input_sum = (*(network+i)/*Layer*/+j)/*Neuron*/->bias;
             // TODO: bias also needs to be included in backprop.
         }
     }
@@ -67,8 +67,19 @@ void feed_forward(int num_layers, int *layersizes, neuron **network, float *inpu
     }
 }
 
-void backpropagate(int num_layers, int *layersizes, neuron **network, float *target_outputs) {
+void backpropagate(int num_layers, int *layersizes, neuron **network, float *expected_outputs) {
     // TODO: the stuff to go here.
+    // 1. For each layer, backwards...
+    //    a. Calculate the gradient of the weights -> per neuron (gradient[w_i] = input[i] * deriv_sigmoid(gradient[o])).
+    //    b. Calculate the gradient of the inputs  -> per neuron (gradient[x_i] = weight[i] * deriv_sigmoid(gradient[o])).
+    //    c. Calculate the DELTA of the weights    -> per neuron (DELTA_wi = gradient[w_i] * Error[out] * lRate).
+    //    TODO: Figure out how this changes for vectorised networks (I think it adds).
+    int i;
+    for (i = num_layers-1; i >= 0; i--) {
+        // For each layer, working backwards (remember, the last layer is just for getting the outputs).
+        // TODO: calculate the delta for each neuron/weight.
+        printf("LAYERS.\n");
+    }
 }
 
 int main(int argc, char **argv) {
@@ -91,5 +102,6 @@ int main(int argc, char **argv) {
         feed_forward(NUM_LAYERS, lsizes, net, the_data);
         printf("%f\n", (*(net+NUM_LAYERS))->input_sum);
     }
+    backpropagate(NUM_LAYERS, lsizes, net, &(*(net+NUM_LAYERS))->input_sum);
     return 0;
 }
